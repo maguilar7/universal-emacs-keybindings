@@ -43,15 +43,15 @@ global keys
         ,"d": ["{Del}", False, ""]
         ,"e": ["{End}", True, ""]
         ,"f": ["{Right}", True, ""]
-        ,"g": ["{Escape}", False, ""]
+        ,"g": ["", False, "MacroEscape"]
         ,"h": ["", False, ""]
         ,"j": ["", True, ""]
         ,"k": ["", False, "MacroKillLine"]
         ,"n": ["{Down}", True, ""]
         ,"o": ["{Enter}", False, ""]
         ,"p": ["{Up}", True, ""]
-        ,"r": ["^f", False, ""]
-        ,"s": ["^f", False, ""]
+        ,"r": ["", False, "MacroReverseSearch"]
+        ,"s": ["", False, "MacroIncrementalSearch"]
         ,"v": ["{PgDn}", True, ""]
         ,"w": ["^x", False, ""]
         ,"y": ["^v", False, ""]
@@ -102,6 +102,7 @@ keys["globalOverride"]
 global appsWithNativeEmacsKeybindings = ["emacs.exe", "rubymine64.exe", "conemu64.exe"]
 global ctrlXActive := False
 global ctrlSpaceActive := False
+global searchActive := False
 
 ^a::
 ^b::
@@ -415,4 +416,51 @@ MacroKillLine()
   Send {ShiftDown}{END}{ShiftUp}
   Send ^x
   Send {Del}
+}
+
+; Macro to search incrementally
+MacroIncrementalSearch()
+{
+  If (searchActive)
+  {
+    Send {F3}
+  }
+  Else
+  {
+    StartSearch()
+  }
+}
+
+; Macro to do reverse search
+MacroReverseSearch()
+{
+  If (searchActive)
+  {
+    Send +{F3}
+  }
+  Else
+  {
+    StartSearch()
+  }
+}
+
+; Macro to escape and clear search state
+MacroEscape()
+{
+  Send {Escape}
+  ClearSearch()
+}
+
+; Macro to start search
+StartSearch()
+{
+  Send ^f
+  searchActive := True
+}
+
+
+; Macro to clear search state
+ClearSearch()
+{
+  searchActive := False
 }
